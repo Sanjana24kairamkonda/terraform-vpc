@@ -2,7 +2,6 @@
 provider "google" {
   project = var.project_id
   region  = var.region
-  credentials = file(var.google_credentials_file)
 }
 
 # VPC Creation
@@ -77,6 +76,15 @@ resource "google_compute_instance" "web_instance" {
 # Load Balancer (Simplified, using external IP)
 resource "google_compute_global_address" "lb_ip" {
   name = "lb-ip"
+}
+
+# Health Check for Load Balancer
+resource "google_compute_health_check" "default" {
+  name = "default-health-check"
+
+  http_health_check {
+    port = 80
+  }
 }
 
 resource "google_compute_backend_service" "backend" {
